@@ -1,9 +1,13 @@
 -- =============================================================================
--- PieceFacile Database
--- Bootstrap - PostgreSQL Extensions
+-- PieceFacile
+-- PostgreSQL Extensions
 -- =============================================================================
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE EXTENSION IF NOT EXISTS unaccent;
 
 COMMENT ON EXTENSION pgcrypto IS
-'Provides cryptographic functions and UUID generation support.';
+'Cryptographic functions and UUID generation';
+
+COMMENT ON EXTENSION unaccent IS
+'Accent-insensitive text search';
