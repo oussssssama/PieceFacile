@@ -1,35 +1,65 @@
+-- =============================================================================
+-- PieceFacile Database
+-- Module      : Marketplace
+-- Table       : offers
+-- Description : Seller offers submitted for buyer requests
+-- =============================================================================
+
 CREATE TABLE offers (
-id BIGSERIAL PRIMARY KEY,
 
-  
-offer_number VARCHAR(50) UNIQUE,
+    id BIGSERIAL PRIMARY KEY,
 
-request_id BIGINT NOT NULL
-    REFERENCES requests(id),
+    offer_number VARCHAR(50) UNIQUE,
 
-shop_id BIGINT NOT NULL
-    REFERENCES shops(id),
+    request_id BIGINT NOT NULL
+        REFERENCES requests(id)
+        ON DELETE CASCADE,
 
-status offer_status
-    DEFAULT 'sent',
+    shop_id BIGINT NOT NULL
+        REFERENCES shops(id)
+        ON DELETE CASCADE,
 
-seller_message TEXT,
+    status offer_status NOT NULL
+        DEFAULT 'sent',
 
-delivery_notes TEXT,
+    seller_message TEXT,
 
-total_amount NUMERIC(12,2)
-    DEFAULT 0,
+    delivery_available BOOLEAN NOT NULL DEFAULT FALSE,
 
-expires_at TIMESTAMPTZ,
+    delivery_notes TEXT,
 
-accepted_at TIMESTAMPTZ,
+    total_amount NUMERIC(12,2)
+        NOT NULL DEFAULT 0,
 
-created_at TIMESTAMPTZ DEFAULT NOW(),
+    price_update_count INTEGER
+        NOT NULL DEFAULT 0,
 
-updated_at TIMESTAMPTZ DEFAULT NOW(),
+    last_price_update_at TIMESTAMPTZ,
 
-deleted_at TIMESTAMPTZ,
+    expires_at TIMESTAMPTZ,
 
-UNIQUE(request_id, shop_id)
+    accepted_at TIMESTAMPTZ,
 
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT uq_offer_shop
+        UNIQUE (request_id, shop_id),
+
+    CONSTRAINT chk_offer_total_amount
+        CHECK (total_amount >= 0),
+
+    CONSTRAINT chk_offer_price_updates
+        CHECK (price_update_count >= 0)
+
+);
+
+COMMENT ON TABLE offers IS
+'Stores seller offers submitted in response to buyer requests.';
+
+COMMENT ON COLUMN offers.offer_number IS
+'Human-readable offer identifier.';
+
+COMMENT ON COLUMN offers.total_amount IS
+'Total value of all offered items.';

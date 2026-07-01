@@ -1,41 +1,75 @@
+-- =============================================================================
+-- PieceFacile Database
+-- Module : Marketplace
+-- Table  : shops
+-- =============================================================================
+
 CREATE TABLE shops (
-id BIGSERIAL PRIMARY KEY,
 
+    id BIGSERIAL PRIMARY KEY,
 
-owner_profile_id UUID NOT NULL UNIQUE
-    REFERENCES profiles(id),
+    owner_user_id UUID NOT NULL
+        REFERENCES profiles(id)
+        ON DELETE CASCADE,
 
-shop_name VARCHAR(255) NOT NULL,
+    shop_name VARCHAR(255) NOT NULL,
 
-description TEXT,
+    shop_slug VARCHAR(255) NOT NULL UNIQUE,
 
-phone VARCHAR(50),
+    description TEXT,
 
-whatsapp VARCHAR(50),
+    phone_number VARCHAR(50) NOT NULL,
 
-address TEXT,
+    whatsapp_number VARCHAR(50),
 
-wilaya_id BIGINT NOT NULL
-    REFERENCES wilayas(id),
+    telegram_username VARCHAR(100),
 
-logo_url TEXT,
+    facebook_page_url TEXT,
 
-cover_url TEXT,
+    working_hours TEXT,
 
-seller_type seller_type NOT NULL,
+    wilaya_id BIGINT NOT NULL
+        REFERENCES wilayas(id),
 
-verification_status verification_status
-    DEFAULT 'pending',
+    latitude NUMERIC(9,6),
 
-approved_at TIMESTAMPTZ,
+    longitude NUMERIC(9,6),
 
-is_active BOOLEAN DEFAULT TRUE,
+    address TEXT,
 
-created_at TIMESTAMPTZ DEFAULT NOW(),
+    logo_url TEXT,
 
-updated_at TIMESTAMPTZ DEFAULT NOW(),
+    cover_url TEXT,
 
-deleted_at TIMESTAMPTZ
+    seller_type seller_type NOT NULL,
 
+    verification_status verification_status
+        NOT NULL DEFAULT 'pending',
+
+    commercial_register_number VARCHAR(100) UNIQUE,
+
+    commercial_register_verified_at TIMESTAMPTZ,
+
+    approved_at TIMESTAMPTZ,
+
+    last_activity_at TIMESTAMPTZ,
+
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT uq_shop_owner
+        UNIQUE (owner_user_id)
 
 );
+
+COMMENT ON TABLE shops IS
+'Stores seller shops participating in the PieceFacile marketplace.';
+
+COMMENT ON COLUMN shops.owner_user_id IS
+'User account that owns the shop.';
+
+COMMENT ON COLUMN shops.verification_status IS
+'Current shop verification status.';

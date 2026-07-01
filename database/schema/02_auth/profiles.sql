@@ -1,27 +1,49 @@
+-- =============================================================================
+-- PieceFacile Database
+-- Module : Authentication
+-- Table  : profiles
+-- =============================================================================
+
 CREATE TABLE profiles (
-id UUID PRIMARY KEY
-REFERENCES auth.users(id)
-ON DELETE CASCADE,
 
+    id UUID PRIMARY KEY
+        REFERENCES auth.users(id)
+        ON DELETE CASCADE,
 
-role user_role NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
 
-full_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE,
 
-phone VARCHAR(50),
+    phone VARCHAR(50) UNIQUE,
 
-avatar_url TEXT,
+    avatar_url TEXT,
 
-preferred_language VARCHAR(5)
-    DEFAULT 'ar',
+    preferred_language VARCHAR(5) NOT NULL DEFAULT 'ar',
 
-is_active BOOLEAN DEFAULT TRUE,
+    state VARCHAR(50),
 
-created_at TIMESTAMPTZ DEFAULT NOW(),
+    is_admin BOOLEAN NOT NULL DEFAULT FALSE,
 
-updated_at TIMESTAMPTZ DEFAULT NOW(),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
 
-deleted_at TIMESTAMPTZ
+    profile_completed_at TIMESTAMPTZ,
 
+    last_login TIMESTAMPTZ,
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 
 );
+
+COMMENT ON TABLE profiles IS
+'Stores public profile information for authenticated users.';
+
+COMMENT ON COLUMN profiles.id IS
+'References Supabase Auth user ID.';
+
+COMMENT ON COLUMN profiles.preferred_language IS
+'Preferred application language (ar or fr).';
+
+COMMENT ON COLUMN profiles.is_admin IS
+'Determines administrative privileges.';

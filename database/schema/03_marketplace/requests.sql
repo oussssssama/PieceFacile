@@ -1,37 +1,65 @@
+-- =============================================================================
+-- PieceFacile Database
+-- Module      : Marketplace
+-- Table       : requests
+-- Description : Buyer spare-parts requests
+-- =============================================================================
+
 CREATE TABLE requests (
-id BIGSERIAL PRIMARY KEY,
 
+    id BIGSERIAL PRIMARY KEY,
 
-request_number VARCHAR(50) UNIQUE,
+    request_number VARCHAR(50) UNIQUE,
 
-buyer_profile_id UUID NOT NULL
-    REFERENCES profiles(id),
+    buyer_profile_id UUID NOT NULL
+        REFERENCES profiles(id)
+        ON DELETE CASCADE,
 
-vehicle_category_id BIGINT NOT NULL
-    REFERENCES vehicle_categories(id),
+    vehicle_category_id BIGINT NOT NULL
+        REFERENCES vehicle_categories(id),
 
-brand_id BIGINT NOT NULL
-    REFERENCES brands(id),
+    brand_id BIGINT NOT NULL
+        REFERENCES brands(id),
 
-model_id BIGINT NOT NULL
-    REFERENCES models(id),
+    model_id BIGINT NOT NULL
+        REFERENCES models(id),
 
-year SMALLINT NOT NULL,
+    vehicle_year SMALLINT NOT NULL,
 
-wilaya_id BIGINT NOT NULL
-    REFERENCES wilayas(id),
+    wilaya_id BIGINT NOT NULL
+        REFERENCES wilayas(id),
 
-visibility_scope visibility_scope NOT NULL,
+    latitude NUMERIC(9,6),
 
-status request_status DEFAULT 'draft',
+    longitude NUMERIC(9,6),
 
-expires_at TIMESTAMPTZ,
+    notes TEXT,
 
-created_at TIMESTAMPTZ DEFAULT NOW(),
+    visibility_scope visibility_scope NOT NULL,
 
-updated_at TIMESTAMPTZ DEFAULT NOW(),
+    status request_status NOT NULL DEFAULT 'draft',
 
-deleted_at TIMESTAMPTZ
+    expires_at TIMESTAMPTZ,
 
+    closed_at TIMESTAMPTZ,
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT chk_vehicle_year
+        CHECK (
+            vehicle_year BETWEEN 1950
+            AND EXTRACT(YEAR FROM CURRENT_DATE)::SMALLINT + 1
+        )
 
 );
+
+COMMENT ON TABLE requests IS
+'Stores buyer requests for spare parts.';
+
+COMMENT ON COLUMN requests.request_number IS
+'Human-readable request identifier.';
+
+COMMENT ON COLUMN requests.notes IS
+'Additional buyer information about the requested parts.';
