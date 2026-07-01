@@ -22,3 +22,26 @@ ON shop_specializations(model_id);
 CREATE INDEX idx_shop_specializations_part_category
 ON shop_specializations(part_category_id);
 
+CREATE INDEX idx_offers_request
+ON offers(request_id);
+
+CREATE INDEX idx_offers_shop
+ON offers(shop_id);
+
+CREATE INDEX idx_offers_status
+ON offers(status);
+
+CREATE INDEX idx_deals_shop
+ON deals(shop_id);
+
+CREATE INDEX idx_messages_conversation
+ON messages(conversation_id);
+
+CREATE INDEX idx_notifications_profile
+ON notifications(profile_id);
+
+CREATE INDEX idx_notifications_read
+ON notifications(read_at);
+
+CREATE INDEX idx_reports_status
+ON reports(status);
