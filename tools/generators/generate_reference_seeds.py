@@ -1,54 +1,28 @@
-"""
-PieceFacile Universal Reference Seed Generator
-"""
-
 from pathlib import Path
-import argparse
-
-from tools.common.excel import open_workbook
-
+import sys
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
-
-def parse_arguments():
-
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument(
-        "--dataset",
-        required=True,
-        help="Dataset name",
-    )
-
-    parser.add_argument(
-        "--input",
-        required=True,
-        help="Excel dataset",
-    )
-
-    return parser.parse_args()
-
+from tools.generators.core.discovery import discover_datasets
 
 def main():
 
-    args = parse_arguments()
-
-    workbook = open_workbook(Path(args.input))
+    datasets = discover_datasets(ROOT)
 
     print()
 
-    print("PieceFacile Reference Generator")
+    print("Datasets found")
 
-    print("--------------------------------")
+    print("----------------")
 
-    print(f"Dataset : {args.dataset}")
+    for ds in datasets:
 
-    print(f"Sheets  : {workbook.sheetnames}")
+        print(ds["name"])
 
-    print()
+        print(ds["excel"])
 
+        print()
 
 if __name__ == "__main__":
     main()
-
